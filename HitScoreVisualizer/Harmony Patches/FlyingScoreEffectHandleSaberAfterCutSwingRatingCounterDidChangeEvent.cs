@@ -1,18 +1,18 @@
 ﻿using Harmony;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace HitScoreVisualizer.Harmony_Patches
 {
-    [HarmonyPatch(typeof(FlyingScoreEffect), "HandleSaberSwingRatingCounterDidChangeEvent",
-        new Type[] { typeof(SaberSwingRatingCounter), typeof(float) })]
+    [HarmonyPatch(
+        // Type to patch in MainAssembly of Beat Saber:
+        typeof(FlyingScoreEffect),
+        // The name of method to patch in that type:
+        "HandleSaberSwingRatingCounterDidChangeEvent",
+        // That method's parameter types:
+        typeof(SaberSwingRatingCounter),
+        typeof(float))]
     class FlyingScoreEffectHandleSaberAfterCutSwingRatingCounterDidChangeEvent
     {
-        static bool Prefix(SaberSwingRatingCounter saberSwingRatingCounter, FlyingScoreEffect __instance, NoteCutInfo ____noteCutInfo)
+        static bool Prefix(SaberSwingRatingCounter saberSwingRatingCounter, FlyingScoreEffect __instance, ref NoteCutInfo ____noteCutInfo)
         {
             if (Config.instance.doIntermediateUpdates)
             {

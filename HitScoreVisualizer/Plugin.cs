@@ -1,15 +1,15 @@
 ﻿using Harmony;
-using IPA.Old;
 using System;
 using System.Reflection;
+using IPA;
 using UnityEngine.SceneManagement;
 
 namespace HitScoreVisualizer
 {
-    public class Plugin : IPlugin
+    public class Plugin : IBeatSaberPlugin
     {
         public string Name => "HitScoreVisualizer";
-        public string Version => "2.4.1";
+        public string Version => $"{majorVersion}.{minorVersion}.{patchVersion}";
 
         internal const int majorVersion = 2;
         internal const int minorVersion = 4;
@@ -17,8 +17,8 @@ namespace HitScoreVisualizer
 
         public void OnApplicationStart()
         {
-            SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
-            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            SceneManager.sceneLoaded += OnSceneLoaded;
             try
             {
                 var harmony = HarmonyInstance.Create("com.arti.BeatSaber.HitScoreVisualizer");
@@ -33,27 +33,10 @@ namespace HitScoreVisualizer
             Config.load();
         }
 
-        private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene arg1)
-        {
-        }
-
-        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
-        {
-        }
-
         public void OnApplicationQuit()
         {
-            SceneManager.activeSceneChanged -= SceneManagerOnActiveSceneChanged;
-            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-        }
-
-        public void OnLevelWasLoaded(int level)
-        {
-
-        }
-
-        public void OnLevelWasInitialized(int level)
-        {
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         public void OnUpdate()
@@ -61,6 +44,26 @@ namespace HitScoreVisualizer
         }
 
         public void OnFixedUpdate()
+        {
+        }
+
+        /// <summary>Gets invoked whenever a scene is loaded.</summary>
+        /// <param name="scene">The scene currently loaded</param>
+        /// <param name="sceneMode">The type of loading</param>
+        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
+        {
+        }
+
+        /// <summary>Gets invoked whenever a scene is unloaded</summary>
+        /// <param name="scene">The unloaded scene</param>
+        public void OnSceneUnloaded(Scene scene)
+        {
+        }
+
+        /// <summary>Gets invoked whenever a scene is changed</summary>
+        /// <param name="prevScene">The Scene that was previously loaded</param>
+        /// <param name="nextScene">The Scene being loaded</param>
+        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
         }
 

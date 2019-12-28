@@ -1,26 +1,26 @@
 ﻿using Harmony;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-
 using static HitScoreVisualizer.Utils.ReflectionUtil;
 
 namespace HitScoreVisualizer.Harmony_Patches
 {
-    [HarmonyPatch(typeof(FlyingScoreEffect), "InitAndPresent",
-        new Type[] {
-            typeof(NoteCutInfo),
-            typeof(int),
-            typeof(float),
-            typeof(Vector3),
-            typeof(Color)})]
+    [HarmonyPatch(
+        // Type to patch in MainAssembly of Beat Saber:
+        typeof(FlyingScoreEffect),
+        // The name of method to patch in that type:
+        "InitAndPresent",
+        // That method's parameter types:
+        typeof(NoteCutInfo),
+        typeof(int),
+        typeof(float),
+        typeof(Vector3),
+        typeof(Quaternion),
+        typeof(Color))]
     class FlyingScoreEffectInitAndPresent
     {
-        public static FlyingScoreEffect currentEffect = null;
-        static void Prefix(ref Vector3 targetPos, FlyingScoreEffect __instance)
+        public static FlyingScoreEffect currentEffect;
+
+        static void Prefix(FlyingScoreEffect __instance, ref Vector3 targetPos)
         {
             if (Config.instance.useFixedPos)
             {
@@ -48,7 +48,7 @@ namespace HitScoreVisualizer.Harmony_Patches
             if (currentEffect == effect) currentEffect = null;
         }
 
-        static void Postfix(FlyingScoreEffect __instance, ref Color ____color, NoteCutInfo noteCutInfo)
+        static void Postfix(FlyingScoreEffect __instance, NoteCutInfo noteCutInfo)
         {
             void judge(SaberSwingRatingCounter counter)
             {
